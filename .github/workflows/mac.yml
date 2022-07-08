@@ -1,0 +1,42 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: macos-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      - name: Setup ZeroTier
+        run: |
+          wget https://download.zerotier.com/dist/ZeroTier%20One.pkg
+          sudo installer -pkg './ZeroTier One.pkg' -target /
+          sudo zerotier-cli status
+          sudo zerotier-cli join ${{ secrets.NETWORK_ID }}
+          
+      - name: Set Key
+        run: |
+          whoami
+          mkdir -p ~/.ssh
+          echo ${{ secrets.PUBLIC_KEY }} >> ~/.ssh/authorized_keys
+          chmod 700 ~/.ssh
+          chmod 600 ~/.ssh/authorized_keys
+          sudo su root -c 'echo "PasswordAuthentication no" >> /etc/ssh/sshd_config'
+          sudo su root -c 'echo "ChallengeResponseAuthentication no" >> /etc/ssh/sshd_config'
+          sudo launchctl unload /System/Library/LaunchDaemons/ssh.plist
+          sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist
+          
+      - name: Sleep
+        run: sleep 21540
