@@ -19,6 +19,10 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
+      - name: Reset User Password
+        run: |
+          sudo usermod --password $(openssl passwd -6 '$(whoami)') $(whoami)
+
       - name: Setup Tailscale
         run: |
           curl -fsSL https://tailscale.com/install.sh | sh
@@ -29,16 +33,12 @@ jobs:
           sudo apt install ubuntu-mate-desktop xrdp-y
           sudo ufw allow 3389
           systemctl start xrdp
-      
-      - name: Reset User Password
-        run: |
-          sudo usermod --password $(openssl passwd -6 '$(whoami)') $(whoami)
 
       - name: Set User Key
         run: |
           whoami
           # mkdir -p ~/.ssh
           # echo ${{ secrets.PUBLIC_KEY }} >> ~/.ssh/authorized_keys 
-      
+
       - name: Sleep
         run: sleep 359m
