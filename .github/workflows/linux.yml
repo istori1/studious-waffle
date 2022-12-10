@@ -27,7 +27,7 @@ jobs:
       - name: Setup Desktop
         run: |
           sudo apt update
-          sudo apt install ubuntu-mate-desktop -y
+          sudo apt install ubuntu-desktop-minimal -y
       
       - name: Setup NX Server
         run: |
