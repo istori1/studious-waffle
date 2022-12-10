@@ -22,7 +22,7 @@ jobs:
       - name: Reset User Password
         run: |
           # sudo usermod --password $(openssl passwd -6 '$(whoami)') $(whoami)
-          sudo su root -c 'echo $(whoami) | passwd $(whoami) --stdin'
+          sudo su root -c 'echo -e "$(whoami)\n$(whoami)" | passwd $(whoami)'
 
       - name: Setup Tailscale
         run: |
