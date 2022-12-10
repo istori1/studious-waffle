@@ -21,7 +21,8 @@ jobs:
 
       - name: Reset User Password
         run: |
-          sudo usermod --password $(openssl passwd -6 '$(whoami)') $(whoami)
+          # sudo usermod --password $(openssl passwd -6 '$(whoami)') $(whoami)
+          sudo su root -c 'echo $(whoami) | passwd $(whoami) --stdin'
 
       - name: Setup Tailscale
         run: |
