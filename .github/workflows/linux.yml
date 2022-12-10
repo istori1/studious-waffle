@@ -19,11 +19,6 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
-      - name: Reset User Password
-        run: |
-          # sudo usermod --password $(openssl passwd -6 '$(whoami)') $(whoami)
-          sudo su root -c 'echo -e "$(whoami)\n$(whoami)" | passwd $(whoami)'
-
       - name: Setup Tailscale
         run: |
           curl -fsSL https://tailscale.com/install.sh | sh
@@ -32,15 +27,23 @@ jobs:
       - name: Setup Desktop
         run: |
           sudo apt update
-          sudo apt install ubuntu-mate-desktop xrdp -y
-          sudo ufw allow 3389
-          sudo systemctl start xrdp
+          sudo apt install ubuntu-mate-desktop -y
+      
+      - name: Setup NX Server
+        run: |
+          wget https://download.nomachine.com/download/8.2/Linux/nomachine_8.2.3_4_amd64.deb
+          sudo apt install ./nomachine_8.2.3_4_amd64.deb -y
+          rm ./nomachine_8.2.3_4_amd64.deb
 
       - name: Set User Key
         run: |
-          whoami
-          # mkdir -p ~/.ssh
-          # echo ${{ secrets.PUBLIC_KEY }} >> ~/.ssh/authorized_keys 
+          echo "Setting keys for the user: $(whoami)"
+          mkdir -p ~/.ssh
+          echo ${{ secrets.PUBLIC_KEY }} >> ~/.ssh/authorized_keys
+          mkdir -p ~/.nx/config
+          echo ${{ secrets.PUBLIC_KEY }} >> ~/.ssh/authorized.crt
+          chmod 0600 ~.nx/config/authorized.crt
+          sudo /etc/NX/nxserver --restart
 
       - name: Sleep
         run: sleep 359m
