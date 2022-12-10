@@ -41,8 +41,8 @@ jobs:
           mkdir -p ~/.ssh
           echo ${{ secrets.PUBLIC_KEY }} >> ~/.ssh/authorized_keys
           mkdir -p ~/.nx/config
-          echo ${{ secrets.PUBLIC_KEY }} >> ~/.ssh/authorized.crt
-          chmod 0600 ~.nx/config/authorized.crt
+          echo ${{ secrets.PUBLIC_KEY }} >> ~/.nx/config/authorized.crt
+          chmod 0600 ~/.nx/config/authorized.crt
           sudo /etc/NX/nxserver --restart
 
       - name: Sleep
