@@ -16,26 +16,23 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - uses: actions/checkout@v3
-      
-      - name: Setup ZeroTier
+      - name: Setup Tailscale
         run: |
-          wget https://download.zerotier.com/dist/ZeroTier%20One.pkg
-          sudo installer -pkg './ZeroTier One.pkg' -target /
-          sudo zerotier-cli status
-          sudo zerotier-cli join ${{ secrets.NETWORK_ID }}
-          
-      - name: Set Key
+          go install tailscale.com/cmd/tailscale{,d}@main
+          sudo $HOME/go/bin/tailscaled install-system-daemon
+          sudo tailscale up --authkey ${{ secrets.TAILSCALE_AUTHKEY }}
+
+      - name: Authorize publickey
         run: |
           whoami
           mkdir -p ~/.ssh
-          echo ${{ secrets.PUBLIC_KEY }} >> ~/.ssh/authorized_keys
+          echo ${{ secrets.PUBLICKEY }} >> ~/.ssh/authorized_keys
           chmod 700 ~/.ssh
           chmod 600 ~/.ssh/authorized_keys
           sudo su root -c 'echo "PasswordAuthentication no" >> /etc/ssh/sshd_config'
           sudo su root -c 'echo "ChallengeResponseAuthentication no" >> /etc/ssh/sshd_config'
           sudo launchctl unload /System/Library/LaunchDaemons/ssh.plist
           sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist
-          
+
       - name: Sleep
         run: sleep 21540
