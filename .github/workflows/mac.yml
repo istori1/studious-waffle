@@ -18,8 +18,7 @@ jobs:
     steps:
       - name: Setup Tailscale
         run: |
-          go install tailscale.com/cmd/tailscale{,d}@main
-          sudo $HOME/go/bin/tailscaled install-system-daemon
+          brew install tailscale
           sudo tailscale up --authkey ${{ secrets.TAILSCALE_AUTHKEY }}
 
       - name: Authorize publickey
