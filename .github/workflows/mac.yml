@@ -18,8 +18,8 @@ jobs:
     steps:
       - name: Setup Tailscale
         run: |
-          brew install --cask tailscale
-          sudo tailscale.wrapper.sh
+          brew install tailscale
+          sudo brew services start tailscale
           sudo tailscale up --authkey ${{ secrets.TAILSCALE_AUTHKEY }}
 
       - name: Authorize publickey
