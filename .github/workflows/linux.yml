@@ -15,6 +15,15 @@ jobs:
     runs-on: ubuntu-latest
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Authorize publickey
+        run: |
+          echo "Authorizing publickey for the user: $(whoami)"
+          mkdir -p ~/.ssh
+          echo ${{ secrets.PUBLICKEY }} >> ~/.ssh/authorized_keys
+          mkdir -p ~/.nx/config
+          echo ${{ secrets.PUBLICKEY }} >> ~/.nx/config/authorized.crt
+          chmod 0600 ~/.nx/config/authorized.crt
+
       - name: Setup Tailscale
         run: |
           curl -fsSL https://tailscale.com/install.sh | sh
@@ -30,16 +39,6 @@ jobs:
           wget https://download.nomachine.com/download/8.2/Linux/nomachine_8.2.3_4_amd64.deb
           sudo apt install ./nomachine_8.2.3_4_amd64.deb -y
           rm ./nomachine_8.2.3_4_amd64.deb
-
-      - name: Authorize publickey
-        run: |
-          echo "Authorizing publickey for the user: $(whoami)"
-          mkdir -p ~/.ssh
-          echo ${{ secrets.PUBLICKEY }} >> ~/.ssh/authorized_keys
-          mkdir -p ~/.nx/config
-          echo ${{ secrets.PUBLICKEY }} >> ~/.nx/config/authorized.crt
-          chmod 0600 ~/.nx/config/authorized.crt
-          sudo /etc/NX/nxserver --restart
 
       - name: Sleep
         run: sleep 355m
