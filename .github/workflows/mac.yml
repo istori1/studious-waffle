@@ -34,6 +34,13 @@ jobs:
           sudo su root -c 'echo "ChallengeResponseAuthentication no" >> /etc/ssh/sshd_config'
           sudo launchctl unload /System/Library/LaunchDaemons/ssh.plist
           sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist
+          mkdir -p ~/.nx/config
+          echo ${{ secrets.PUBLICKEY }} >> ~/.nx/config/authorized.crt
+          chmod 0600 ~/.nx/config/authorized.crt
+
+      - name: Setup NX Server
+        run: |
+          brew install --cask nomachine
 
       - name: Sleep
         run: sleep 21540
