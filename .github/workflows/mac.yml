@@ -18,11 +18,8 @@ jobs:
     steps:
       - name: Setup Tailscale
         run: |
-          go env -w GO111MODULE=off
-          GOPATH=${GOPATH:-~/go}
-          export PATH="${PATH}:${GOPATH}/bin"
-          go install tailscale.com/cmd/tailscale{,d}@main
-          sudo tailscaled install-system-daemon
+          brew install tailscale
+          sudo brew services start tailscale
           sudo tailscale up
 
       - name: Authorize publickey
