@@ -16,13 +16,6 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Setup Tailscale
-        run: |
-          brew update
-          brew install tailscale
-          sudo brew services start tailscale
-          sudo tailscale up --authkey ${{ secrets.TAILSCALE_AUTHKEY }}
-
       - name: Authorize publickey
         run: |
           echo "Authorizing publickey for the user: $(whoami)"
@@ -38,9 +31,16 @@ jobs:
           echo ${{ secrets.PUBLICKEY }} >> ~/.nx/config/authorized.crt
           chmod 0600 ~/.nx/config/authorized.crt
 
+      - name: Setup Tailscale
+        run: |
+          brew update
+          brew install tailscale
+          sudo brew services start tailscale
+          sudo tailscale up --authkey ${{ secrets.TAILSCALE_AUTHKEY }}
+
       - name: Setup NX Server
         run: |
           brew install --cask nomachine
 
       - name: Sleep
-        run: sleep 21540
+        run: sleep 21300
