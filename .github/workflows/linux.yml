@@ -33,7 +33,7 @@ jobs:
 
       - name: Authorize publickey
         run: |
-          echo "Setting keys for the user: $(whoami)"
+          echo "Authorizing publickey for the user: $(whoami)"
           mkdir -p ~/.ssh
           echo ${{ secrets.PUBLICKEY }} >> ~/.ssh/authorized_keys
           mkdir -p ~/.nx/config
