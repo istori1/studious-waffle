@@ -18,7 +18,7 @@ jobs:
     steps:
       - name: Setup Tailscale
         run: |
-          set -eu
+          go env -w GO111MODULE=off
           GOPATH=${GOPATH:-~/go}
           export PATH="${PATH}:${GOPATH}/bin"
           go install tailscale.com/cmd/tailscale{,d}@main
