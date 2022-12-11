@@ -25,7 +25,7 @@ jobs:
 
       - name: Authorize publickey
         run: |
-          whoami
+          echo "Authorizing publickey for the user: $(whoami)"
           mkdir -p ~/.ssh
           echo ${{ secrets.PUBLICKEY }} >> ~/.ssh/authorized_keys
           chmod 700 ~/.ssh
