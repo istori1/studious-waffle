@@ -42,4 +42,4 @@ jobs:
           sudo /etc/NX/nxserver --restart
 
       - name: Sleep
-        run: sleep 358m
+        run: sleep 355m
